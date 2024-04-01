@@ -1,0 +1,17 @@
+html {
+  overflow: auto;
+  background-color: #fdfcf0;
+}
+
+/* css title */
+.page-title {
+  border-bottom: 3px solid #241d1e;
+  margin-bottom: 35px;
+  position: relative;
+}
+.page-title h1 {
+  color: #222;
+  font-size: 38px;
+  font-weight: normal;
+  margin-bottom: 15px;
+}
