@@ -1,7 +1,7 @@
 <template>
   <div id="detail-movie-tab">
     <BreadcrumbComponent :breadcrumb="breadcrumb" />
-    <div class="main container">
+    <div class="main container is-max-desktop">
       <div class="page-title">
         <h1>Nội dung phim: {{ movieName }}</h1>
       </div>
@@ -10,7 +10,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { useRoute } from 'vue-router'
 import { ref } from 'vue'
 import BreadcrumbComponent from '../components/BreadcrumbComponent.vue'
@@ -22,11 +22,11 @@ let movieName = route.params.movieName
 
 // data breadcrumb
 let title = route.name == 'showingMovieDetail' ? 'Phim đang chiếu' : 'Phim sắp chiếu'
-let routeVal = route.name == 'showingMovieDetail' ? '/showing-movie' : '/upcoming-movie'
+let routeValue = route.name == 'showingMovieDetail' ? '/showing-movie' : '/upcoming-movie'
 const breadcrumb = ref({
   title: title,
   movieName: movieName,
-  route: routeVal
+  route: routeValue
 })
 
 // data movie

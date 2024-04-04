@@ -3,15 +3,15 @@
     <ul class="products-grid">
       <li class="film-lists" v-for="movie in movies" :key="movie.id">
         <div class="product-images">
-          <RouterLink :to="`${$route.path}/${movie.name}`" class="product-image">
+          <router-link :to="`${$route.path}/${movie.name}`" class="product-image">
             <img :src="movie.image" alt="" />
-          </RouterLink>
+          </router-link>
         </div>
         <div class="product-info">
           <div class="product-name">
-            <RouterLink :to="`${$route.path}/${movie.name}`" :title="movie.title">{{
+            <router-link :to="`${$route.path}/${movie.name}`" :title="movie.title">{{
               movie.title
-            }}</RouterLink>
+            }}</router-link>
           </div>
           <div class="movie-info">
             <span class="info-bold">Thể loại: </span>
@@ -27,21 +27,19 @@
           </div>
         </div>
         <div class="list-buttons">
-          <button type="button" class="button is-danger btn-booking">MUA VÉ</button>
+          <router-link :to="{ name: 'bookingTicket' }">
+            <button type="button" class="button is-danger btn-booking">MUA VÉ</button>
+          </router-link>
         </div>
       </li>
     </ul>
   </div>
 </template>
 
-<script setup>
-// Định nghĩa props để nhận mảng dữ liệu từ component cha
+<script setup lang="ts">
 import { defineProps } from 'vue'
 import { RouterLink } from 'vue-router'
-
-const props = defineProps({
-  movies: Array // Định nghĩa props movies để nhận mảng từ component cha
-})
+defineProps(['movies'])
 </script>
 
 <style scoped>

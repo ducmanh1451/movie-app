@@ -1,7 +1,7 @@
 <template>
   <div id="showing-movie-tab">
     <BreadcrumbComponent :breadcrumb="breadcrumb" />
-    <div class="main container">
+    <div class="main container is-max-desktop">
       <div class="page-title">
         <h1>Phim đang chiếu</h1>
       </div>

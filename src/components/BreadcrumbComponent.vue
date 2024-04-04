@@ -1,12 +1,12 @@
 <template>
   <div class="breadcrumbs">
     <nav class="breadcrumb has-succeeds-separator" aria-label="breadcrumbs">
-      <ul class="container">
+      <ul class="container is-max-desktop">
         <li class="home">
-          <RouterLink to="/"></RouterLink>
+          <router-link :to="{ name: 'home' }"></router-link>
         </li>
         <li>
-          <RouterLink :to="breadcrumb.route">{{ breadcrumb.title }}</RouterLink>
+          <router-link :to="breadcrumb.route">{{ breadcrumb.title }}</router-link>
         </li>
         <li v-show="breadcrumb.movieName !== undefined">
           <a>{{ breadcrumb.movieName ?? '' }}</a>
@@ -20,8 +20,10 @@
 import { RouterLink } from 'vue-router'
 import { defineProps } from 'vue'
 
-const props = defineProps({
-  breadcrumb: Object
+defineProps({
+  breadcrumb: {
+    type: Object
+  }
 })
 </script>
 
