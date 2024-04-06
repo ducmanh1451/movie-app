@@ -34,14 +34,10 @@
             >
           </div>
           <div class="navbar-end">
-            <div class="navbar-item">
-              <div class="buttons">
-                <a class="button is-primary">
-                  <strong>Đăng ký</strong>
-                </a>
-                <a class="button is-light"> Đăng nhập </a>
-              </div>
-            </div>
+            <router-link :to="{ name: 'login' }" class="navbar-item pr-0 login"
+              >Đăng nhập</router-link
+            >
+            <router-link :to="{ name: 'login' }" class="navbar-item register">Đăng ký</router-link>
           </div>
         </div>
       </nav>
@@ -61,17 +57,47 @@ import { RouterLink } from 'vue-router'
 #header .navbar {
   background-color: unset;
 }
+/* css navbar left */
 #header .navbar .navbar-start .navbar-item {
   color: rgb(34, 34, 34);
   font-family: Verdana, Arial, sans-serif;
   font-weight: bold;
   transition: transform 0.3s ease;
+  text-transform: uppercase;
 }
 #header .navbar .navbar-start .navbar-item:hover {
-  background-color: unset;
   transform: scale(1.05);
 }
-#header .navbar .navbar-start .navbar-item.router-link-active {
+#header .navbar .navbar-start .navbar-item:hover,
+#header .navbar .navbar-start .navbar-item.router-link-active,
+#header .navbar .navbar-start .navbar-item:active,
+#header .navbar .navbar-end .navbar-item:hover,
+#header .navbar .navbar-end .navbar-item.router-link-active,
+#header .navbar .navbar-end .navbar-item:active {
   background-color: unset;
+}
+/* css navbar right */
+.navbar-end .navbar-item {
+  text-transform: uppercase;
+}
+.navbar-end .navbar-item.login {
+  position: relative;
+}
+.navbar-end .navbar-item.login::before {
+  width: 25px;
+  content: '';
+  background-image: url(../assets/icon_login25.png);
+  background-repeat: no-repeat;
+  position: absolute;
+  left: -15px;
+  top: 14px;
+  height: 25px;
+}
+.navbar-end .navbar-item.login::after {
+  width: 25px;
+  content: '/';
+  position: absolute;
+  right: -27px;
+  height: 25px;
 }
 </style>

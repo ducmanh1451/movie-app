@@ -5,7 +5,9 @@ import ShowingMoviePage from '../views/ShowingMoviePage.vue'
 import NewsAndOffersPage from '../views/NewsAndOffersPage.vue'
 import MovieDetailPage from '../views/MovieDetailPage.vue'
 import BookingPage from '../views/BookingPage.vue'
-import BookingDetailPage from '../views/BookingDetailPage.vue'
+import BookingSeatsPage from '../views/BookingSeatsPage.vue'
+import PaymentPage from '../views/PaymentPage.vue'
+import LoginRegisterPage from '../views/LoginRegisterPage.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -46,9 +48,19 @@ const router = createRouter({
       component: BookingPage
     },
     {
-      path: '/booking/detail',
-      name: 'bookingDetailTicket',
-      component: BookingDetailPage
+      path: '/booking/seats',
+      name: 'bookingSeats',
+      component: BookingSeatsPage
+    },
+    {
+      path: '/payment',
+      name: 'payment',
+      component: PaymentPage
+    },
+    {
+      path: '/login',
+      name: 'login',
+      component: LoginRegisterPage
     }
   ]
 })

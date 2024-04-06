@@ -16,11 +16,26 @@
       </div>
     </div>
   </div>
-  <div class="notice">abc</div>
+  <div class="notice">
+    <div class="icon-list">
+      <div class="icon-item checked">Checked</div>
+      <div class="icon-item occupied">Đã chọn</div>
+    </div>
+    <div class="icon-list">
+      <div class="icon-item standard">Thường</div>
+      <div class="icon-item vip">VIP</div>
+    </div>
+  </div>
+  <TicketInfoComponent :buttons="buttons" />
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue'
+import TicketInfoComponent from '../components/TicketInfoComponent.vue'
+
+const buttons = ['btn-back','btn-prev']
+
+// declare seats
 const seats = ref<
   Array<Array<{ row: number; column: number; display: number; type: string; selected: boolean }>>
 >([])
@@ -63,6 +78,7 @@ const toggleSeatSelection = (seat: Seat) => {
 </script>
 
 <style scoped>
+/* css seating chart */
 .seating-chart .screen {
   width: 100%;
   height: 45px;
@@ -71,7 +87,6 @@ const toggleSeatSelection = (seat: Seat) => {
   background: url(../assets/bg-screen.png) no-repeat top center transparent;
   background-size: 100% auto;
 }
-
 .row {
   display: flex;
   flex-wrap: wrap;
@@ -104,5 +119,41 @@ const toggleSeatSelection = (seat: Seat) => {
 }
 .d-none {
   display: none;
+}
+/* css notice */
+.notice {
+  display: flex;
+  justify-content: center;
+  margin-top: 15px;
+}
+.notice .icon-list {
+  width: 200px;
+  display: flex;
+  flex-direction: column;
+}
+.notice .icon-list:first-child {
+  margin-left: 95px;
+}
+.notice .icon-list .icon-item::before {
+  content: '';
+  display: inline-block;
+  vertical-align: middle;
+  width: 18px;
+  height: 18px;
+  margin: 0 5px 0 0;
+}
+.icon-item.checked::before {
+  background-color: #b11500;
+  border: 1px solid #b11500;
+}
+.icon-item.occupied::before {
+  background-color: #bbb;
+  border: 1px solid #bbb;
+}
+.icon-item.standard::before {
+  border: 1px solid #01c73c;
+}
+.icon-item.vip::before {
+  border: 1px solid #f71708;
 }
 </style>
