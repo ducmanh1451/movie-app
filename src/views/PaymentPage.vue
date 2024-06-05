@@ -34,20 +34,14 @@
                     <li class="method">
                       <input id="method-vnpay" type="radio" name="payment-method" />
                       <label for="method-vnpay">
-                        <span
-                          class="method-icon"
-                          style="background-image: url('src/assets/vnpay_newlogo.png')"
-                        ></span>
+                        <span class="method-icon" style="background-image: url('src/assets/vnpay_newlogo.png')"></span>
                         <span class="method-name">VNPAY</span>
                       </label>
                     </li>
                     <li class="method">
                       <input id="method-zalopay" type="radio" name="payment-method" />
                       <label for="method-zalopay">
-                        <span
-                          class="method-icon"
-                          style="background-image: url('src/assets/zalopay_logo.png')"
-                        ></span>
+                        <span class="method-icon" style="background-image: url('src/assets/zalopay_logo.png')"></span>
                         <span class="method-name">ZALOPAY</span>
                       </label>
                     </li>
@@ -67,13 +61,14 @@
                     <tr>
                       <td>VIP</td>
                       <td>
-                        <span class="price">124.909,00&nbsp;₫</span>
+                        <span class="price">{{ bookingStore.getSeatsNameAndTotalPrice.totalPrice }}</span>
                       </td>
                     </tr>
                   </tbody>
                   <tfoot>
                     <tr>
-                      <td colspan="2"><span class="price">124.909,00&nbsp;₫</span></td>
+                      <td colspan="2"><span class="price">{{ bookingStore.getSeatsNameAndTotalPrice.totalPrice }}</span>
+                      </td>
                     </tr>
                   </tfoot>
                 </table>
@@ -87,7 +82,7 @@
                   </thead>
                   <tfoot>
                     <tr>
-                      <td><span class="price">0,00&nbsp;₫</span></td>
+                      <td><span class="price">0,00&nbsp;đ</span></td>
                     </tr>
                   </tfoot>
                 </table>
@@ -99,24 +94,25 @@
                       <th colspan="2">Tổng số tiền thanh toán</th>
                     </tr>
                   </thead>
-                  <tbody>
+                  <!-- <tbody>
                     <tr>
                       <td>VNPAY</td>
                       <td>
                         <span class="price">124.909,00&nbsp;₫</span>
                       </td>
                     </tr>
-                  </tbody>
+                  </tbody> -->
                   <tfoot>
                     <tr>
-                      <td colspan="2"><span class="price">124.909,00&nbsp;₫</span></td>
+                      <td colspan="2"><span class="price">{{ bookingStore.getSeatsNameAndTotalPrice.totalPrice }}</span>
+                      </td>
                     </tr>
                   </tfoot>
                 </table>
               </div>
             </div>
           </div>
-          <TicketInfoComponent :buttons="buttons" />
+          <TicketInfoComponent buttonLeft="btn-previous" buttonRight="btn-payment" />
         </div>
       </div>
     </div>
@@ -125,13 +121,17 @@
 
 <script setup lang="ts">
 import TicketInfoComponent from '../components/TicketInfoComponent.vue'
-const buttons = ['btn-back', 'btn-payment']
+import { useBookingStore } from '../stores/useBookingStore'
+
+// variables
+const bookingStore = useBookingStore()
 </script>
 
 <style scoped>
 .card {
   background-color: #fdfcf0;
 }
+
 .title {
   font-size: 18px;
   font-weight: 600;
@@ -139,12 +139,15 @@ const buttons = ['btn-back', 'btn-payment']
   line-height: 32px;
   margin-bottom: 15px;
 }
+
 .wrapper {
   display: flex;
 }
+
 .left-content {
   width: 70%;
 }
+
 .right-content {
   width: 30%;
 }
@@ -152,11 +155,13 @@ const buttons = ['btn-back', 'btn-payment']
 .step {
   width: 90%;
 }
+
 .step .step-title {
   background: #bcbdc0;
   border: 2px solid #9d9fa2;
   padding: 5px 0px;
 }
+
 .step .step-title .step-payment {
   text-transform: none;
   font-style: italic;
@@ -165,6 +170,7 @@ const buttons = ['btn-back', 'btn-payment']
   font-family: Verdana, Arial, sans-serif;
   margin-left: 20px;
 }
+
 .step .step-title span {
   color: #231f20;
   font-size: 16px;
@@ -181,6 +187,7 @@ ul.methods li.method {
   background-color: #fff1ce;
   padding-left: 20px;
 }
+
 ul.methods li.method .method-icon {
   background-position: 50% 50%;
   background-size: 100% 100%;
@@ -192,6 +199,7 @@ ul.methods li.method .method-icon {
   top: 5px;
   left: 40px;
 }
+
 ul.methods li.method label {
   padding-left: 55px;
   height: 100%;
@@ -205,25 +213,31 @@ ul.methods li.method label {
   font-size: 14px;
   line-height: 18px;
 }
+
 .right-content .cart-items table thead,
 .right-content .cart-items table tfoot {
   font-weight: bold;
   text-align: center;
 }
+
 .right-content .cart-items table tr {
   border: 1px solid #d4d3c9;
   background: #fff1ce;
 }
+
 .right-content .cart-items table tfoot tr {
   background: #d0cece;
 }
+
 .right-content .cart-items table th,
 .right-content .cart-items table td {
   padding: 10px;
 }
+
 .right-content .cart-items.table-payment table thead tr {
   background: #e71a0f;
 }
+
 .right-content .cart-items.table-payment table thead tr th {
   color: #fff;
 }

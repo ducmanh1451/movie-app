@@ -1,38 +1,29 @@
 <template>
   <div class="cart">
-    <div :class="[{ 'btn-left': true }, buttons[0]]"></div>
+    <div v-if="props.buttonLeft" class="btn btn-left" @click="goBack">
+      <ArrowLeftIcon class="btn-icon"></ArrowLeftIcon>
+      <span>Previous</span>
+    </div>
     <div class="minicart-wrapper">
       <div class="cart-item movie-detail">
-        <div class="movie-img">
-          <img
-            src="https://iguov8nhvyobj.vcdn.cloud/media/catalog/product/cache/1/thumbnail/dc33889b0f8b5da88052ef70de32f1cb/p/o/poster_payoff_godzilla_va_kong_3_1_.jpg"
-            alt="GODZILLA X KONG: ĐẾ CHẾ MỚI"
-          />
-        </div>
         <div class="movie-info">
-          <ul>
-            <li>GODZILLA X KONG: ĐẾ CHẾ MỚI</li>
-            <li>2D</li>
-          </ul>
+          <span>PHIM: {{ bookingStore.bookingData.movie_name }}</span>
+          <img :src="bookingStore.bookingData.poster" alt="">
         </div>
       </div>
       <div class="cart-item seat-detail">
         <ul>
           <li class="seat-detail-item">
             <div class="label">Rạp</div>
-            <div>CGV Hùng Vương Plaza</div>
-          </li>
-          <li class="seat-detail-item">
-            <div class="label">Suất chiếu</div>
-            <div>19:40, 05/04/2024</div>
+            <div>{{ bookingStore.bookingData.cinema_name }}</div>
           </li>
           <li class="seat-detail-item">
             <div class="label">Phòng chiếu</div>
-            <div>Cinema 5</div>
+            <div>{{ bookingStore.bookingData.room_name }}</div>
           </li>
           <li class="seat-detail-item">
             <div class="label">Ghế</div>
-            <div>A1, A2, A3, A4, A5, A6, A7, A8</div>
+            <div>{{ bookingStore.getSeatsNameAndTotalPrice.seatNames }}</div>
           </li>
         </ul>
       </div>
@@ -40,18 +31,60 @@
         <ul>
           <li class="price-detail-item">
             <div class="label">Tổng tiền:</div>
-            <div>150,000 đ</div>
+            <div>{{ bookingStore.getSeatsNameAndTotalPrice.totalPrice }}</div>
           </li>
         </ul>
       </div>
     </div>
-    <div :class="[{ 'btn-right': true }, buttons[1]]"></div>
+    <div v-if="props.buttonRight && props.buttonRight == 'btn-next'" class="btn btn-right" @click="goToPayment">
+      <ArrowRightIcon class="btn-icon"></ArrowRightIcon>
+      <span>Next</span>
+    </div>
+    <div v-if="props.buttonRight && props.buttonRight == 'btn-payment'" class="btn btn-right" @click="payment">
+      <ShoppingBagIcon class="btn-icon"></ShoppingBagIcon>
+      <span>Payment</span>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { defineProps } from 'vue'
-defineProps(['buttons'])
+import { ArrowLeftIcon, ArrowRightIcon, ShoppingBagIcon } from '@heroicons/vue/24/solid'
+import { useRouter } from 'vue-router'
+import { useBookingStore } from '../stores/useBookingStore'
+
+// define props
+const props = defineProps({
+  buttonLeft: {
+    type: String
+  },
+  buttonRight: {
+    type: String
+  },
+})
+
+// variables
+const router = useRouter()
+const bookingStore = useBookingStore()
+
+// functions
+const goBack = () => {
+  router.go(-1);
+}
+
+const goToPayment = () => {
+  if (bookingStore.seatsBooked.length > 0) {
+    // Chuyển tới router "payment" với các tham số cần thiết
+    router.push({ name: 'payment' })
+  } else {
+    // Nếu chưa chọn ghế, hiển thị alert thông báo
+    alert('Vui lòng chọn ghế trước khi tiếp tục')
+  }
+}
+
+const payment = () => {
+  alert('payment')
+}
 </script>
 
 <style scoped>
@@ -67,30 +100,36 @@ defineProps(['buttons'])
   justify-content: center;
   align-items: center;
 }
-.btn-left,
-.btn-right {
-  float: none;
-  width: 110px;
-  display: inline-block;
-  height: 110px;
-  vertical-align: top;
-  background: url(../assets/bg-cgv-button-process.png) no-repeat;
+
+/* button css  */
+
+.btn {
+  width: 100px;
+  height: 100px;
+  border: 2px solid #ccc;
+  border-radius: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  color: #ffffffc2;
+  background-color: #343433;
   cursor: pointer;
-  position: absolute;
-  top: 36px;
-}
-.btn-left {
-  left: 5px;
-}
-.btn-right {
-  right: 0px;
 }
 
-.btn-prev {
-  background-position: -152px -441px;
+.btn .btn-icon {
+  width: 50%;
+  height: 50%;
 }
-.btn-payment {
-  background-position: -152px -110px;
+
+.btn.btn-left {
+  position: absolute;
+  left: 5px;
+}
+
+.btn.btn-right {
+  position: absolute;
+  right: 5px;
 }
 
 /* css for minicart */
@@ -108,24 +147,19 @@ defineProps(['buttons'])
 
 .movie-detail {
   display: flex;
+  justify-content: end;
 }
-.movie-img,
-.movie-info {
-  width: 50%;
-  height: 100%;
-}
-.movie-img {
+
+.movie-detail .movie-info {
+  padding-top: 20px;
+  padding-bottom: 20px;
+  width: 100%;
   display: flex;
-  justify-content: center;
-  padding-top: 20px;
 }
-.movie-img img {
-  width: 74px;
-  height: 108px;
-  display: block;
-}
-.movie-info ul {
-  padding-top: 20px;
+
+.movie-detail .movie-info img {
+  width: 50%;
+  padding-left: 10px;
 }
 
 .seat-detail ul,
@@ -133,19 +167,23 @@ defineProps(['buttons'])
   padding-top: 20px;
   padding-left: 10px;
 }
+
 .seat-detail-item,
 .price-detail-item {
   display: flex;
 }
+
 .seat-detail-item .label,
 .price-detail-item .label {
-  width: 75px;
   margin: 0;
   color: #bbb;
   font-size: 14px;
-  max-width: 75px;
-  min-width: 75px;
+  width: 80px;
+  min-width: 80px;
+  max-width: 80px;
+  margin-right: 10px;
 }
+
 .seat-detail-item div:last-child,
 .price-detail-item div:last-child {
   font-weight: 500;

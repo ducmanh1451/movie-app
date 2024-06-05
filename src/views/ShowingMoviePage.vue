@@ -11,27 +11,23 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import BreadcrumbComponent from '../components/BreadcrumbComponent.vue'
 import MoviesComponent from '../components/MoviesComponent.vue'
+import axios from 'axios'
 
+
+const movies = ref([])
 // Data movies
-const movies = ref([
-  {
-    id: 1,
-    name: 'godzillaxkong',
-    title: 'GODZILLA X KONG: ĐẾ CHẾ MỚI',
-    image:
-      'https://iguov8nhvyobj.vcdn.cloud/media/catalog/product/cache/1/thumbnail/190x260/2e2b8cd282892c71872b9e67d2cb5039/p/o/poster_payoff_godzilla_va_kong_3_1_.jpg'
-  },
-  {
-    id: 2,
-    name: 'dune2',
-    title: 'DUNE: HÀNH TINH CÁT - PHẦN HAI',
-    image:
-      'https://iguov8nhvyobj.vcdn.cloud/media/catalog/product/cache/1/thumbnail/190x260/2e2b8cd282892c71872b9e67d2cb5039/p/o/poster_dune_2_bb_3_no_qr_1_.jpg'
+onMounted(async () => {
+  try {
+    // fetch data cinema
+    const response = await axios.get(`http://localhost:8000/api/v1/movie/get-showing-movie`)
+    movies.value = response.data.payload
+  } catch (error) {
+    console.error('Error fetching genre data:', error)
   }
-])
+})
 
 // Data breadcrumb
 const breadcrumb = ref({

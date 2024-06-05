@@ -46,12 +46,19 @@ const router = createRouter({
       path: '/booking',
       name: 'bookingTicket',
       component: BookingPage
+      // props: (route) => ({ movieId: route.query.movieId })
     },
     {
       path: '/booking/seats',
       name: 'bookingSeats',
       component: BookingSeatsPage
+      // props: (route) => ({ bookingId: route.query.bookingId })
     },
+    // {
+    //   path: '/payment/:booking_id/:seatsBooked',
+    //   name: 'payment',
+    //   component: PaymentPage
+    // },
     {
       path: '/payment',
       name: 'payment',

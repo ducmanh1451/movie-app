@@ -11,28 +11,22 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import BreadcrumbComponent from '../components/BreadcrumbComponent.vue'
 import MoviesComponent from '../components/MoviesComponent.vue'
+import axios from 'axios'
 
+const movies = ref([])
 // Data movies
-const movies = ref([
-  {
-    id: 1,
-    name: 'monkey-man',
-    title: 'MONKEY MAN BÁO THÙ',
-    image:
-      'https://iguov8nhvyobj.vcdn.cloud/media/catalog/product/cache/1/thumbnail/190x260/2e2b8cd282892c71872b9e67d2cb5039/4/7/470x700_monkeyman.jpg'
-  },
-  {
-    id: 2,
-    name: 'civil-war',
-    title: 'NGÀY TÀN CỦA ĐẾ QUỐC',
-    image:
-      'https://iguov8nhvyobj.vcdn.cloud/media/catalog/product/cache/1/thumbnail/190x260/2e2b8cd282892c71872b9e67d2cb5039/k/t/kt_facebook.jpg'
+onMounted(async () => {
+  try {
+    // fetch data cinema
+    const response = await axios.get(`http://localhost:8000/api/v1/movie/get-upcoming-movie`)
+    movies.value = response.data.payload
+  } catch (error) {
+    console.error('Error fetching genre data:', error)
   }
-])
-
+})
 // Data breadcrumb
 const breadcrumb = ref({
   title: 'Phim sắp chiếu',

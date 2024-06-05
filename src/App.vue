@@ -6,6 +6,15 @@ import FooterComponent from './components/FooterComponent.vue'
 
 <template>
   <HeaderComponent />
-  <RouterView />
+  <div id="content">
+    <RouterView />
+  </div>
   <FooterComponent />
 </template>
+
+<style>
+#content {
+  margin-top: 82px;
+  margin-bottom: 120px;
+}
+</style>
