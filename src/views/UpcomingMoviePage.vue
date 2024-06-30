@@ -5,7 +5,12 @@
       <div class="page-title">
         <h1>Phim sắp chiếu</h1>
       </div>
-      <MoviesComponent :movies="movies" />
+      <div v-if="movies.length > 0">
+        <MoviesComponent :movies="movies" />
+      </div>
+      <div v-else>
+        Không có dữ liệu
+      </div>
     </div>
   </div>
 </template>
