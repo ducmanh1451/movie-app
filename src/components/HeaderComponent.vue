@@ -22,9 +22,14 @@
             <router-link :to="{ name: 'upcomingMovie' }" class="navbar-item">Phim sắp chiếu</router-link>
             <router-link :to="{ name: 'newsAndOffers' }" class="navbar-item">Tin mới & Ưu đãi</router-link>
           </div>
-          <div class="navbar-end">
+          <div v-if="authStore.accessToken == ''" class="navbar-end">
             <router-link :to="{ name: 'login' }" class="navbar-item pr-0 login">Đăng nhập</router-link>
             <router-link :to="{ name: 'login' }" class="navbar-item register">Đăng ký</router-link>
+          </div>
+          <div v-if="authStore.accessToken != ''" class="navbar-end">
+            <router-link :to="{ name: 'customer' }" class="navbar-item pr-0 login">Xin chào {{
+              authStore.customerData.customer_name }}</router-link>
+            <a @click="logout" class="navbar-item register">Thoát</a>
           </div>
         </div>
       </nav>
@@ -33,7 +38,18 @@
 </template>
 
 <script setup lang="ts">
-import { RouterLink } from 'vue-router'
+import { RouterLink, useRouter } from 'vue-router'
+import { useAuthStore } from '../stores/useAuthStore'
+
+const authStore = useAuthStore()
+const router = useRouter()
+
+const logout = () => {
+  authStore.logout();
+  // go to home page after logout success
+  router.push({ name: 'home' })
+}
+
 </script>
 
 <style scoped>

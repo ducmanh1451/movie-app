@@ -43,11 +43,14 @@ import { convertDateStringToTime } from "../helpers/date"
 import BreadcrumbComponent from '../components/BreadcrumbComponent.vue'
 import LoadingComponent from '../components/LoadingComponent.vue'
 import { useBookingStore } from '../stores/useBookingStore'
+import { useAuthStore } from '../stores/useAuthStore'
+
 
 // variables
 const route = useRoute()
 const router = useRouter()
 const bookingStore = useBookingStore()
+const authStore = useAuthStore()
 const bookings = ref<Array<{ cinema_id: string; cinema_name: string; room_id: string, room_name: string, opening_date: string, times: Array<{ opening_start_time: string, booking_id: string }> }>>([])
 const isLoading = ref<boolean>(false)
 let dates = ref<Array<{ day: string; month: string; dayName: string, fullDate: Date }>>([])
@@ -80,16 +83,36 @@ const searchBooking = async (index: number, date: { day: string; month: string; 
     const response = await axios.get('http://localhost:8001/api/v1/booking/search', {
       params: {
         movieId: bookingStore.bookingData.movie_id,
-        date: date.fullDate.toISOString() // Chuyển ngày thành chuỗi ISO để truyền cho server
+        date: date.fullDate.toISOString()
+      },
+      headers: {
+        Authorization: `${authStore.accessToken}`
       }
     });
     // Xử lý dữ liệu trả về ở đây
     bookings.value = response.data.bookings
-  } catch (error) {
-    console.error('Error calling API:', error);
-  }
-  finally {
-    isLoading.value = false // Kết thúc loading
+    isLoading.value = false
+  } catch (error: any) {
+    // Nếu access token hết hạn => gọi API refresh access token và gọi lại hàm search
+    if (error.response && error.response.status === 403) {
+      try {
+        await authStore.refreshAccessToken()
+        const retryResponse = await axios.get('http://localhost:8001/api/v1/booking/search', {
+          params: {
+            movieId: bookingStore.bookingData.movie_id,
+            date: date.fullDate.toISOString(),
+          },
+          headers: {
+            Authorization: `${authStore.accessToken}`
+          },
+        })
+        bookings.value = retryResponse.data.bookings
+      } catch (retryError: any) {
+        console.log('Error retrying API searchBooking:', retryError)
+      }
+    }
+    console.log('Error calling API searchBooking:', error)
+    isLoading.value = false
   }
 }
 

@@ -31,3 +31,18 @@ export type Movie = {
   movie_name: string
   poster: string
 }
+
+export type FormRegister = {
+  customer_name: string
+  phone_number: string
+  birthday: Date | null
+  gender: number
+  email: string
+  password: string
+  address: string
+}
+
+export type FormLogin = {
+  email: string
+  password: string
+}

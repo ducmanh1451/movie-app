@@ -7,7 +7,9 @@ import MovieDetailPage from '../views/MovieDetailPage.vue'
 import BookingPage from '../views/BookingPage.vue'
 import BookingSeatsPage from '../views/BookingSeatsPage.vue'
 import PaymentPage from '../views/PaymentPage.vue'
-import LoginRegisterPage from '../views/LoginRegisterPage.vue'
+import AuthPage from '../views/AuthPage.vue'
+import CustomerPage from '../views/CustomerPage.vue'
+import Authentication from '../middleware/auth'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -45,29 +47,31 @@ const router = createRouter({
     {
       path: '/booking',
       name: 'bookingTicket',
-      component: BookingPage
-      // props: (route) => ({ movieId: route.query.movieId })
+      component: BookingPage,
+      beforeEnter: Authentication
     },
     {
       path: '/booking/seats',
       name: 'bookingSeats',
-      component: BookingSeatsPage
-      // props: (route) => ({ bookingId: route.query.bookingId })
+      component: BookingSeatsPage,
+      beforeEnter: Authentication
     },
-    // {
-    //   path: '/payment/:booking_id/:seatsBooked',
-    //   name: 'payment',
-    //   component: PaymentPage
-    // },
     {
       path: '/payment',
       name: 'payment',
-      component: PaymentPage
+      component: PaymentPage,
+      beforeEnter: Authentication
     },
     {
       path: '/login',
       name: 'login',
-      component: LoginRegisterPage
+      component: AuthPage
+    },
+    {
+      path: '/customer',
+      name: 'customer',
+      component: CustomerPage,
+      beforeEnter: Authentication
     }
   ]
 })

@@ -50,13 +50,13 @@ defineProps(['movies'])
 const bookingStore = useBookingStore()
 const router = useRouter()
 
-// mounted
-onMounted(() => {
-  // reset booking_date in state
-  bookingStore.resetBookingData()
-  // reset seatsBooked
-  bookingStore.resetSeats()
-})
+// // mounted
+// onMounted(() => {
+//   // reset booking_date in state
+//   bookingStore.resetBookingData()
+//   // reset seatsBooked
+//   bookingStore.resetSeats()
+// })
 
 // functions
 // convert genre to string

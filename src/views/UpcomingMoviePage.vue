@@ -15,14 +15,21 @@ import { ref, onMounted } from 'vue'
 import BreadcrumbComponent from '../components/BreadcrumbComponent.vue'
 import MoviesComponent from '../components/MoviesComponent.vue'
 import axios from 'axios'
+import { useBookingStore } from '../stores/useBookingStore'
 
 const movies = ref([])
+const bookingStore = useBookingStore()
+
 // Data movies
 onMounted(async () => {
   try {
     // fetch data cinema
     const response = await axios.get(`http://localhost:8000/api/v1/movie/get-upcoming-movie`)
     movies.value = response.data.payload
+    // reset booking_date in state
+    bookingStore.resetBookingData()
+    // reset seatsBooked
+    bookingStore.resetSeats()
   } catch (error) {
     console.error('Error fetching genre data:', error)
   }

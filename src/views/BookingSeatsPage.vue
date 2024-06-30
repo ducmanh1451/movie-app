@@ -26,11 +26,13 @@ import LoadingComponent from '../components/LoadingComponent.vue'
 import type { Booking } from "../helpers/types"
 import { formatDateToDisplay, convertDateStringToTime } from "../helpers/date";
 import { useBookingStore } from '../stores/useBookingStore'
+import { useAuthStore } from '../stores/useAuthStore'
 
 // variables
 const isLoading = ref<boolean>(false)
 const booking = ref<Booking>()
 const bookingStore = useBookingStore()
+const authStore = useAuthStore()
 
 // mounted
 onMounted(() => {
@@ -47,14 +49,31 @@ onMounted(() => {
 const getBookingInformation = async (bookingId: string) => {
   try {
     isLoading.value = true
-    const response = await axios.get(`http://localhost:8001/api/v1/booking/find/${bookingId}`);
-    booking.value = response.data.booking[0]
+    const response = await axios.get(`http://localhost:8001/api/v1/booking/find/${bookingId}`, {
+      headers: {
+        Authorization: `${authStore.accessToken}`
+      }
+    });
     // Xử lý dữ liệu trả về ở đây
-  } catch (error) {
-    console.error('Error calling API:', error);
-  }
-  finally {
-    isLoading.value = false // Kết thúc loading
+    booking.value = response.data.booking[0]
+    isLoading.value = false
+  } catch (error: any) {
+    // Nếu access token hết hạn => gọi API refresh access token và gọi lại hàm getBookingInformation
+    if (error.response && error.response.status === 403) {
+      try {
+        await authStore.refreshAccessToken()
+        const response = await axios.get(`http://localhost:8001/api/v1/booking/find/${bookingId}`, {
+          headers: {
+            Authorization: `${authStore.accessToken}`
+          }
+        });
+        booking.value = response.data.booking[0]
+      } catch (retryError: any) {
+        console.log('Error retrying API getBookingInformation:', retryError)
+      }
+    }
+    console.log('Error calling API getBookingInformation:', error)
+    isLoading.value = false
   }
 }
 </script>
