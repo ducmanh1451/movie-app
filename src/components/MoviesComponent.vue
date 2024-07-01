@@ -72,7 +72,10 @@ const navigateToBooking = (movie: Movie) => {
     movie_name: movie.movie_name,
     poster: movie.poster,
     room_id: '',
-    room_name: ''
+    room_name: '',
+
+    cinema_id: '',
+    cinema_name: ''
   })
   router.push({ name: 'bookingTicket' })
 }

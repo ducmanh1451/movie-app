@@ -45,7 +45,6 @@ import LoadingComponent from '../components/LoadingComponent.vue'
 import { useBookingStore } from '../stores/useBookingStore'
 import { useAuthStore } from '../stores/useAuthStore'
 
-
 // variables
 const route = useRoute()
 const router = useRouter()
@@ -63,15 +62,17 @@ const selectedIndex = ref<number | null>(null)
 // mounted
 onMounted(() => {
   generateDateList()
-  if (dates.value.length > 0) {
-    searchBooking(0, dates.value[0])
-  }
   // reset booking_id in booking_data in state
   let newBookingData = bookingStore.bookingData
   newBookingData.booking_id = ''
   newBookingData.room_id = ''
   newBookingData.room_name = ''
+  newBookingData.cinema_id = ''
+  newBookingData.cinema_name = ''
   bookingStore.setBookingData(newBookingData)
+  if (dates.value.length > 0) {
+    searchBooking(0, dates.value[0])
+  }
 })
 
 // functions
@@ -136,6 +137,8 @@ const navigateToBookingSeats = (booking_id: string, booking: any) => {
   newBookingData.booking_id = booking_id
   newBookingData.room_id = booking.room_id
   newBookingData.room_name = booking.room_name
+  newBookingData.cinema_id = booking.cinema_id
+  newBookingData.cinema_name = booking.cinema_name
   bookingStore.setBookingData(newBookingData)
   router.push({ name: 'bookingSeats' })
 }

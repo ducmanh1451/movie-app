@@ -24,6 +24,9 @@ export type MovieRoomSeat = {
   type: number
   available: boolean
   price: number
+
+  customer: object
+  booking: boolean
 }
 
 export type Movie = {
