@@ -52,6 +52,9 @@ import { defineProps } from 'vue'
 import { ArrowLeftIcon, ArrowRightIcon, ShoppingBagIcon } from '@heroicons/vue/24/solid'
 import { useRouter } from 'vue-router'
 import { useBookingStore } from '../stores/useBookingStore'
+import axios from 'axios'
+import { useAuthStore } from '../stores/useAuthStore'
+import Swal from 'sweetalert2'
 
 // define props
 const props = defineProps({
@@ -66,6 +69,7 @@ const props = defineProps({
 // variables
 const router = useRouter()
 const bookingStore = useBookingStore()
+const authStore = useAuthStore()
 
 // functions
 const goBack = () => {
@@ -78,12 +82,43 @@ const goToPayment = () => {
     router.push({ name: 'payment' })
   } else {
     // Nếu chưa chọn ghế, hiển thị alert thông báo
-    alert('Vui lòng chọn ghế trước khi tiếp tục')
+    Swal.fire({
+      icon: 'error',
+      title: 'Vui lòng chọn ghế trước khi tiếp tục',
+      showConfirmButton: true,
+      confirmButtonText: 'Đóng'
+    });
   }
 }
 
-const payment = () => {
-  alert('payment')
+const payment = async () => {
+  const response = await axios.post(
+    'http://localhost:8001/api/v1/booking/update-seats-status',
+    {
+      booking_id: bookingStore.bookingData.booking_id,
+      seats: bookingStore.seatsBooked,
+      customer: authStore.customerData
+    },
+    {
+      headers: {
+        Authorization: `${authStore.accessToken}`
+      },
+    }
+  )
+  if (response.status == 200) {
+    bookingStore.resetBookingData()
+    bookingStore.resetSeats()
+    Swal.fire({
+      icon: 'success',
+      title: 'Đặt vé thành công',
+      showConfirmButton: true,
+      confirmButtonText: 'Đóng'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        router.push({ name: 'showingMovie' })
+      }
+    });
+  }
 }
 </script>
 

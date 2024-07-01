@@ -94,14 +94,6 @@
                       <th colspan="2">Tổng số tiền thanh toán</th>
                     </tr>
                   </thead>
-                  <!-- <tbody>
-                    <tr>
-                      <td>VNPAY</td>
-                      <td>
-                        <span class="price">124.909,00&nbsp;₫</span>
-                      </td>
-                    </tr>
-                  </tbody> -->
                   <tfoot>
                     <tr>
                       <td colspan="2"><span class="price">{{ bookingStore.getSeatsNameAndTotalPrice.totalPrice }}</span>

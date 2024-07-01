@@ -11,7 +11,10 @@ export const useBookingStore = defineStore('booking', {
       movie_name: '',
       poster: '',
       room_id: '',
-      room_name: ''
+      room_name: '',
+
+      cinema_id: '',
+      cinema_name: ''
     }
   }),
   actions: {
@@ -46,6 +49,9 @@ export const useBookingStore = defineStore('booking', {
       poster: string
       room_id: string
       room_name: string
+
+      cinema_id: string
+      cinema_name: string
     }) {
       this.bookingData = data
       localStorage.setItem('bookingData', JSON.stringify(data))
@@ -57,7 +63,10 @@ export const useBookingStore = defineStore('booking', {
         movie_name: '',
         poster: '',
         room_id: '',
-        room_name: ''
+        room_name: '',
+
+        cinema_id: '',
+        cinema_name: ''
       }
       localStorage.removeItem('bookingData')
     }

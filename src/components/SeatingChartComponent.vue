@@ -3,9 +3,15 @@
     <div class="screen"></div>
     <div v-if="props.booking?.seats" class="wrapper">
       <div class="main-seat" :style="{ '--column': props.booking?.columns }">
-        <div v-for="(seat, rowIndex) in props.booking?.seats" :key="rowIndex"
+        <!-- <div v-for="(seat, rowIndex) in props.booking?.seats" :key="rowIndex"
           :class="[computedSeatClass(seat), { 'not-available': !seat.available }]" @click="toggleSeatSelection(seat)"
           :seatType="seat.type" :seatPrice="seat.price" :seatId="seat._id">
+          <span :class="[{ 'd-none': seat.type == 3 }]">{{ String.fromCharCode(64 + seat.row) }}{{ seat.column }}
+          </span>
+        </div> -->
+
+        <div v-for="(seat, rowIndex) in props.booking?.seats" :key="rowIndex" :class="computedSeatClass(seat)"
+          @click="toggleSeatSelection(seat)" :seatType="seat.type" :seatPrice="seat.price" :seatId="seat.seat_id">
           <span :class="[{ 'd-none': seat.type == 3 }]">{{ String.fromCharCode(64 + seat.row) }}{{ seat.column }}
           </span>
         </div>
@@ -14,8 +20,8 @@
   </div>
   <div class="notice">
     <div class="icon-list">
-      <div class="icon-item checked">Checked</div>
-      <div class="icon-item occupied">Đã chọn</div>
+      <div class="icon-item checked">Đang chọn</div>
+      <div class="icon-item occupied">Đã đặt</div>
     </div>
     <div class="icon-list">
       <div class="icon-item standard">Thường</div>
@@ -31,6 +37,7 @@ import { defineProps, watch } from 'vue'
 import TicketInfoComponent from '../components/TicketInfoComponent.vue'
 import type { MovieRoomSeat } from "../helpers/types"
 import { useBookingStore } from '../stores/useBookingStore'
+import Swal from 'sweetalert2'
 
 // define props
 const props = defineProps({
@@ -51,8 +58,17 @@ const bookingStore = useBookingStore()
 // functions
 // click seat
 const toggleSeatSelection = (seat: MovieRoomSeat) => {
-  if (bookingStore.seatsBooked.length >= 6) {
-    alert('Chỉ được chọn tối đa 6 ghế')
+  // seat has been booked
+  if (seat.booking) {
+    return
+  }
+  if (bookingStore.seatsBooked.length >= 6 && seat.available) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Chỉ được chọn tối đa 6 ghế',
+      showConfirmButton: true,
+      confirmButtonText: 'Đóng'
+    });
     return
   }
   if (seat.available) {
@@ -75,16 +91,40 @@ watch(
 )
 
 // computed
+// const computedSeatClass = (seat: MovieRoomSeat) => {
+//   console.log(seat);
+//   if (seat.type == 1) {
+//     return 'seat seat-standard'
+//   }
+//   if (seat.type == 2) {
+//     return 'seat seat-vip'
+//   }
+//   if (seat.type == 3) {
+//     return 'seat not-display'
+//   }
+// }
+
 const computedSeatClass = (seat: MovieRoomSeat) => {
+  let seatClass: string = 'seat '
+  // make class by type
   if (seat.type == 1) {
-    return 'seat seat-standard'
+    seatClass += 'seat-standard '
   }
-  if (seat.type == 2) {
-    return 'seat seat-vip'
+  else if (seat.type == 2) {
+    seatClass += 'seat-vip '
   }
-  if (seat.type == 3) {
-    return 'seat not-display'
+  else if (seat.type == 3) {
+    seatClass += 'not-display '
   }
+  // make class by booking
+  if (seat.booking) {
+    seatClass += 'booking '
+  }
+  // make class by available
+  if (!seat.available) {
+    seatClass += 'selecting '
+  }
+  return seatClass
 }
 </script>
 
@@ -129,10 +169,15 @@ const computedSeatClass = (seat: MovieRoomSeat) => {
   pointer-events: none;
 }
 
-.seat.not-available {
-  background: #b11500;
-  border-color: #b11500;
+.seat.booking {
+  background: #bbb;
+  border-color: #bbb;
   color: #fff;
+}
+
+.seat.selecting {
+  background: #6ed9d9;
+  border-color: #6ed9d9;
 }
 
 .seat:not(.not-display) span {
@@ -175,8 +220,8 @@ const computedSeatClass = (seat: MovieRoomSeat) => {
 }
 
 .icon-item.checked::before {
-  background-color: #b11500;
-  border: 1px solid #b11500;
+  background-color: #6ed9d9;
+  border: 1px solid #6ed9d9;
 }
 
 .icon-item.occupied::before {
