@@ -24,7 +24,6 @@ export type MovieRoomSeat = {
   type: number
   available: boolean
   price: number
-
   customer: object
   booking: boolean
 }
@@ -48,4 +47,17 @@ export type FormRegister = {
 export type FormLogin = {
   email: string
   password: string
+}
+
+export type Customer = {
+  _id: string
+  customer_name: string
+  phone_number: string
+  birthday: string
+  gender: number
+  email: string
+  password: string
+  address: string
+  is_change_password: boolean
+  new_password: string
 }

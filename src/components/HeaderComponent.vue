@@ -40,12 +40,16 @@
 <script setup lang="ts">
 import { RouterLink, useRouter } from 'vue-router'
 import { useAuthStore } from '../stores/useAuthStore'
+import { useBookingStore } from '../stores/useBookingStore'
 
 const authStore = useAuthStore()
+const bookingStore = useBookingStore()
 const router = useRouter()
 
 const logout = () => {
-  authStore.logout();
+  authStore.logout()
+  bookingStore.resetBookingData()
+  bookingStore.resetSeats()
   // go to home page after logout success
   router.push({ name: 'home' })
 }

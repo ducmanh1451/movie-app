@@ -92,7 +92,7 @@ const goToPayment = () => {
 }
 
 const payment = async () => {
-  const response = await axios.post(
+  const responseUpdateSeat = await axios.post(
     'http://localhost:8001/api/v1/booking/update-seats-status',
     {
       booking_id: bookingStore.bookingData.booking_id,
@@ -105,7 +105,7 @@ const payment = async () => {
       },
     }
   )
-  if (response.status == 200) {
+  if (responseUpdateSeat.status == 200) {
     bookingStore.resetBookingData()
     bookingStore.resetSeats()
     Swal.fire({
