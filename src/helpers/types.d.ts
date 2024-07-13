@@ -60,4 +60,21 @@ export type Customer = {
   address: string
   is_change_password: boolean
   new_password: string
+  booking_history?: BookingHistory[]
+}
+
+export type BookingHistory = {
+  booking_id: string
+  cinema_name: string
+  room_name: string
+  movie_name: string
+  opening_start_time: string
+  opening_end_time: string
+  booking_date: string
+  seats: [
+    {
+      seat_id: number
+      price: number
+    }
+  ]
 }

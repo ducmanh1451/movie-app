@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import axios from 'axios'
 import { useAuthStore } from '../stores/useAuthStore'
-import type { Customer } from "../helpers/types"
-import { formatDateToDisplay } from "../helpers/date"
+import type { Customer, BookingHistory } from "../helpers/types"
+import { formatDateToDisplay, formatDatetimeToDisplay } from "../helpers/date"
 import LoadingComponent from '../components/LoadingComponent.vue'
 import Swal from 'sweetalert2'
 
@@ -57,15 +57,10 @@ const customerEdit = ref<Customer>({
 })
 const isLoading = ref<boolean>(false)
 const authStore = useAuthStore()
-// const tabs = [
-//     { id: 1, label: 'Thông tin chung' },
-//     { id: 2, label: 'Chi tiết tài khoản' },
-//     { id: 3, label: 'Điểm thưởng' },
-//     { id: 4, label: 'Lịch sử' }
-// ]
 const tabs = [
     { id: 1, label: 'Thông tin chung' },
-    { id: 2, label: 'Chi tiết tài khoản' }
+    { id: 2, label: 'Chi tiết tài khoản' },
+    { id: 3, label: 'Lịch sử' }
 ]
 const selectedTab = ref(tabs[0])
 const selectTab = (tab: { id: number, label: string }) => {
@@ -89,12 +84,20 @@ const updateCustomerInfo = async () => {
                     confirmButtonText: 'Đóng'
                 }).then((result) => {
                     if (result.isConfirmed) {
-
+                        location.reload()
                     }
                 });
             }
             isLoading.value = false
         } catch (error: any) {
+            if (error.response && error.response.status === 400) {
+                Swal.fire({
+                    icon: 'error',
+                    title: error.response.data.error,
+                    showConfirmButton: true,
+                    confirmButtonText: 'Đóng'
+                });
+            }
             if (error.response && error.response.status === 403) {
                 try {
                     await authStore.refreshAccessToken()
@@ -181,12 +184,18 @@ const validateUpdateCustomer = () => {
     // Hợp lệ
     return true
 }
+
+const calculateTotalPrice = (seats: any) => {
+    const totalPrice = seats.reduce((total: number, seat: any) => total + seat.price, 0);
+    return totalPrice.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
+};
+
 </script>
 
 <template>
     <LoadingComponent :loading="isLoading"></LoadingComponent>
     <div id="customer-tab">
-        <div class="main container is-max-desktop">
+        <div class="main container is-fullhd">
             <div class="wrapper">
                 <div class="col-left">
                     <div class="item title">Tài khoản</div>
@@ -300,12 +309,38 @@ const validateUpdateCustomer = () => {
                             </div>
                         </div>
                     </div>
-                    <!-- <div class="point-tab" v-else-if="selectedTab.id === 3">
-                        <div class="item title">Điểm thưởng</div>
-                    </div>
-                    <div class="history-tab" v-else-if="selectedTab.id === 4">
+                    <div class="history-tab" v-else-if="selectedTab.id === 3">
                         <div class="item title">Lịch sử giao dịch</div>
-                    </div> -->
+                        <div>
+                            <table class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth">
+                                <thead>
+                                    <tr>
+                                        <th class="has-text-centered">Rạp</th>
+                                        <th class="has-text-centered">Phòng</th>
+                                        <th class="has-text-centered">Phim</th>
+                                        <th class="has-text-centered">Thời gian<br>bắt đầu</th>
+                                        <th class="has-text-centered">Thời gian<br>kết thúc</th>
+                                        <th class="has-text-centered">Ngày<br>đặt vé</th>
+                                        <th class="has-text-centered">Tổng tiền</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr v-if="customer?.booking_history" v-for="(booking) in customer.booking_history">
+                                        <td>{{ booking.cinema_name ?? '' }}</td>
+                                        <td>{{ booking.room_name ?? '' }}</td>
+                                        <td>{{ booking.movie_name ?? '' }}</td>
+                                        <td>{{ formatDatetimeToDisplay(booking.opening_start_time) ?? '' }}</td>
+                                        <td>{{ formatDatetimeToDisplay(booking.opening_end_time) ?? '' }}</td>
+                                        <td>{{ formatDatetimeToDisplay(booking.booking_date) ?? '' }}</td>
+                                        <td>{{ calculateTotalPrice(booking.seats) }}</td>
+                                    </tr>
+                                    <tr v-else>
+                                        <td colspan="7">Không có dữ liệu</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -430,5 +465,9 @@ const validateUpdateCustomer = () => {
     vertical-align: middle;
     margin-left: 3px;
     color: #e71a0f;
+}
+
+.has-text-centered {
+    vertical-align: middle;
 }
 </style>

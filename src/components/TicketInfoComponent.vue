@@ -92,10 +92,11 @@ const goToPayment = () => {
 }
 
 const payment = async () => {
+  const bookingId = bookingStore.bookingData.booking_id
   const responseUpdateSeat = await axios.post(
     'http://localhost:8001/api/v1/booking/update-seats-status',
     {
-      booking_id: bookingStore.bookingData.booking_id,
+      booking_id: bookingId,
       seats: bookingStore.seatsBooked,
       customer: authStore.customerData
     },
@@ -105,19 +106,37 @@ const payment = async () => {
       },
     }
   )
+  // get booking information from payload
+  const booking = responseUpdateSeat.data.payload[0]
+  const { cinema_name, room_name, movie_name, opening_start_time, opening_end_time } = booking
   if (responseUpdateSeat.status == 200) {
-    bookingStore.resetBookingData()
-    bookingStore.resetSeats()
-    Swal.fire({
-      icon: 'success',
-      title: 'Đặt vé thành công',
-      showConfirmButton: true,
-      confirmButtonText: 'Đóng'
-    }).then((result) => {
-      if (result.isConfirmed) {
-        router.push({ name: 'showingMovie' })
+    const seatsFormatted = bookingStore.seatsBooked.map(seat => ({
+      seat_id: seat.seat_id,
+      price: seat.price
+    }));
+    const responseUpdateHistoryCustomer = await axios.put(
+      `http://localhost:8003/api/v1/user/customer/${authStore.customerData.customer_id}/history`,
+      { booking_id: bookingId, cinema_name, room_name, movie_name, opening_start_time, opening_end_time, seats: seatsFormatted },
+      {
+        headers: {
+          Authorization: `${authStore.accessToken}`
+        },
       }
-    });
+    )
+    if (responseUpdateHistoryCustomer.status === 200) {
+      bookingStore.resetBookingData()
+      bookingStore.resetSeats()
+      Swal.fire({
+        icon: 'success',
+        title: 'Đặt vé thành công',
+        showConfirmButton: true,
+        confirmButtonText: 'Đóng'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          router.push({ name: 'showingMovie' })
+        }
+      });
+    }
   }
 }
 </script>

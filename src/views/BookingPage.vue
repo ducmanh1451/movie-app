@@ -44,6 +44,7 @@ import BreadcrumbComponent from '../components/BreadcrumbComponent.vue'
 import LoadingComponent from '../components/LoadingComponent.vue'
 import { useBookingStore } from '../stores/useBookingStore'
 import { useAuthStore } from '../stores/useAuthStore'
+import Swal from 'sweetalert2'
 
 // variables
 const route = useRoute()
@@ -133,6 +134,18 @@ const generateDateList = () => {
 
 // go to bookingSeat page when click button 
 const navigateToBookingSeats = (booking_id: string, booking: any) => {
+  const bookingSelect = booking.times.find((item: any) => item.booking_id == booking_id);
+  const timeValue = new Date(bookingSelect.opening_start_time).getTime();
+  const currentTimeValue = new Date().getTime();
+  if (timeValue < currentTimeValue) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Phim đã chiếu. Vui lòng chọn suất chiếu khác.',
+      showConfirmButton: true,
+      confirmButtonText: 'Đóng'
+    });
+    return;
+  }
   let newBookingData = bookingStore.bookingData
   newBookingData.booking_id = booking_id
   newBookingData.room_id = booking.room_id
