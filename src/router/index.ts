@@ -3,7 +3,7 @@ import HomePage from '../views/HomePage.vue'
 import UpcomingMoviePage from '../views/UpcomingMoviePage.vue'
 import ShowingMoviePage from '../views/ShowingMoviePage.vue'
 import NewsAndOffersPage from '../views/NewsAndOffersPage.vue'
-import MovieDetailPage from '../views/MovieDetailPage.vue'
+import DetailMoviePage from '../views/DetailMoviePage.vue'
 import BookingPage from '../views/BookingPage.vue'
 import BookingSeatsPage from '../views/BookingSeatsPage.vue'
 import PaymentPage from '../views/PaymentPage.vue'
@@ -24,20 +24,25 @@ const router = createRouter({
       name: 'showingMovie',
       component: ShowingMoviePage
     },
-    {
-      path: '/showing-movie/:movieName',
-      name: 'showingMovieDetail',
-      component: MovieDetailPage
-    },
+    // {
+    //   path: '/showing-movie/:movieName',
+    //   name: 'showingMovieDetail',
+    //   component: MovieDetailPage
+    // },
     {
       path: '/upcoming-movie',
       name: 'upcomingMovie',
       component: UpcomingMoviePage
     },
+    // {
+    //   path: '/upcoming-movie/:movieName',
+    //   name: 'upcomingMovieDetail',
+    //   component: MovieDetailPage
+    // },
     {
-      path: '/upcoming-movie/:movieName',
-      name: 'upcomingMovieDetail',
-      component: MovieDetailPage
+      path: '/detail-movie',
+      name: 'detailMovie',
+      component: DetailMoviePage
     },
     {
       path: '/tin-tuc-va-uu-dai',

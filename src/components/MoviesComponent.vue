@@ -3,7 +3,10 @@
     <ul class="products-grid">
       <li class="film-lists" v-for="movie in movies" :key="movie.id">
         <div class="product-images">
-          <router-link :to="`${$route.path}/${movie.movie_name}`" class="product-image">
+          <!-- <router-link :to="`${$route.path}/${movie.movie_name}`" class="product-image">
+            <img :src="movie.poster" alt="" />
+          </router-link> -->
+          <router-link :to="{ name: 'detailMovie' }" class="product-image">
             <img :src="movie.poster" alt="" />
           </router-link>
         </div>
@@ -27,7 +30,11 @@
           </div>
         </div>
         <div class="list-buttons">
-          <a class="button is-danger btn-booking" href="#" @click.prevent="navigateToBooking(movie)">
+          <a class="button is-danger btn-booking mr-2" href="#" @click.prevent="navigateToDetailMovie(movie)">
+            CHI TIẾT
+          </a>
+          <a v-if="showBookingButton(movie)" class="button is-danger btn-booking" href="#"
+            @click.prevent="navigateToBooking(movie)">
             MUA VÉ
           </a>
         </div>
@@ -37,31 +44,38 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, onMounted } from 'vue'
+import { defineProps } from 'vue'
 import { RouterLink, useRouter } from 'vue-router'
 import { formatDateToDisplay } from "../helpers/date"
 import type { Movie } from '../helpers/types'
 import { useBookingStore } from '../stores/useBookingStore'
+import { useMovieStore } from '../stores/useMovieStore'
 
 // define props
 defineProps(['movies'])
 
 // variables
 const bookingStore = useBookingStore()
+const movieStore = useMovieStore()
 const router = useRouter()
-
-// // mounted
-// onMounted(() => {
-//   // reset booking_date in state
-//   bookingStore.resetBookingData()
-//   // reset seatsBooked
-//   bookingStore.resetSeats()
-// })
 
 // functions
 // convert genre to string
 const convertToString = (genre: string[]) => {
   return genre.join(', ')
+}
+
+const showBookingButton = (movie: Movie) => {
+  const today = new Date()
+  const expectedStartDate = new Date(movie.expected_start_date)
+  const threeDaysBefore = new Date(expectedStartDate)
+  threeDaysBefore.setDate(threeDaysBefore.getDate() - 3)
+  if (movie.movie_type === 1) {
+    return true
+  } else if (movie.movie_type === 0) {
+    return today >= threeDaysBefore && today <= expectedStartDate
+  }
+  return false
 }
 
 // go to booking page
@@ -73,11 +87,16 @@ const navigateToBooking = (movie: Movie) => {
     poster: movie.poster,
     room_id: '',
     room_name: '',
-
     cinema_id: '',
     cinema_name: ''
   })
   router.push({ name: 'bookingTicket' })
+}
+
+// go to detail movie page
+const navigateToDetailMovie = (movie: Movie) => {
+  movieStore.setMovieId(movie._id)
+  router.push({ name: 'detailMovie' })
 }
 </script>
 

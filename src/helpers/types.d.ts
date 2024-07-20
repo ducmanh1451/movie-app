@@ -31,7 +31,17 @@ export type MovieRoomSeat = {
 export type Movie = {
   _id: string
   movie_name: string
+  genre: string[]
+  director: string
+  actors: string[]
+  rating: number
+  movie_type: number
+  expected_start_date: Date
+  expected_end_date: Date
+  movie_duration: number
+  content: string
   poster: string
+  trailer: string
 }
 
 export type FormRegister = {
