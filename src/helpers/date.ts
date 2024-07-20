@@ -47,10 +47,22 @@ export const convertDateStringToTime = (dateString: string): string => {
   }
 
   if (adjustedHours === 0) {
-    adjustedHours = 12
+    // adjustedHours = 12
+    adjustedHours = 0
   }
 
   const timeString = `${adjustedHours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')} ${period}`
 
   return timeString
+}
+
+export const formatDatetimeToDisplay = (date: string) => {
+  const datetime = new Date(date)
+  const day = datetime.getDate().toString().padStart(2, '0')
+  const month = (datetime.getMonth() + 1).toString().padStart(2, '0') // Tháng bắt đầu từ 0 nên cần +1
+  const year = datetime.getFullYear()
+  const hours = datetime.getHours().toString().padStart(2, '0')
+  const minutes = datetime.getMinutes().toString().padStart(2, '0')
+
+  return `${day}/${month}/${year} ${hours}:${minutes}`
 }

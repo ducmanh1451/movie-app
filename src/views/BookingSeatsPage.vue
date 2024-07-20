@@ -6,7 +6,7 @@
         <div class="card-body p-5">
           <div class="title">BOOKING ONLINE</div>
           <div v-if="booking" class="location-info">
-            <span>{{ booking?.cinema_name }} | {{ booking?.room_name }} | Số ghế (96/96)</span>
+            <span>{{ booking?.cinema_name }} | {{ booking?.room_name }}</span>
             <span> {{ formatDateToDisplay(booking?.opening_start_time) }} : {{
               convertDateStringToTime(booking?.opening_start_time) }} - {{
                 convertDateStringToTime(booking?.opening_end_time) }}</span>

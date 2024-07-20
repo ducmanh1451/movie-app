@@ -31,7 +31,17 @@ export type MovieRoomSeat = {
 export type Movie = {
   _id: string
   movie_name: string
+  genre: string[]
+  director: string
+  actors: string[]
+  rating: number
+  movie_type: number
+  expected_start_date: Date
+  expected_end_date: Date
+  movie_duration: number
+  content: string
   poster: string
+  trailer: string
 }
 
 export type FormRegister = {
@@ -60,4 +70,21 @@ export type Customer = {
   address: string
   is_change_password: boolean
   new_password: string
+  booking_history?: BookingHistory[]
+}
+
+export type BookingHistory = {
+  booking_id: string
+  cinema_name: string
+  room_name: string
+  movie_name: string
+  opening_start_time: string
+  opening_end_time: string
+  booking_date: string
+  seats: [
+    {
+      seat_id: number
+      price: number
+    }
+  ]
 }
