@@ -17,10 +17,10 @@
 
         <div id="navbarBasicExample" class="navbar-menu">
           <div class="navbar-start">
-            <router-link :to="{ name: 'home' }" class="navbar-item">Trang chủ</router-link>
+            <!-- <router-link :to="{ name: 'home' }" class="navbar-item">Trang chủ</router-link> -->
             <router-link :to="{ name: 'showingMovie' }" class="navbar-item">Phim đang chiếu</router-link>
             <router-link :to="{ name: 'upcomingMovie' }" class="navbar-item">Phim sắp chiếu</router-link>
-            <router-link :to="{ name: 'newsAndOffers' }" class="navbar-item">Tin mới & Ưu đãi</router-link>
+            <!-- <router-link :to="{ name: 'newsAndOffers' }" class="navbar-item">Tin mới & Ưu đãi</router-link> -->
           </div>
           <div v-if="authStore.accessToken == ''" class="navbar-end">
             <router-link :to="{ name: 'login' }" class="navbar-item pr-0 login">Đăng nhập</router-link>

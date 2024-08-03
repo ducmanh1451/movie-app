@@ -122,7 +122,8 @@ const login = async (data: FormLogin) => {
     if (response.status == 200) {
       authStore.login(response.data.payload, response.data.accessToken, response.data.refreshToken)
       // go to home page after login success
-      router.push({ name: 'home' })
+      // router.push({ name: 'home' })
+      router.push({ name: 'showingMovie' })
     }
   } catch (error: any) {
     if (error.response.data.error) {
